@@ -10,6 +10,7 @@ ipv = ip.split(".")
 netmask = int(input("Netzmaske eingeben: "))
 binary = "00000000000000000000000000000000"
 listBinary=[]
+listeNetmaskeDezimal=[]
 
 def ipUmrechnenToBinary(ip,listBinary):
         #loop um in binary zu schreiben
@@ -17,13 +18,16 @@ def ipUmrechnenToBinary(ip,listBinary):
             #formatiere die liste zu binär um
             j = format(int(i), "08b")
             listBinary.append(j)
+
         ipBinary = listBinary[0]+"."+listBinary[1]+"."+listBinary[2]+"."+listBinary[3]
+        
         print("IP-Adresse:\t\t",ip)
         print("IP-Adresse in Binary: \t",ipBinary)
 
 def netmaskUmrechnenToBinary(netmask,binary):
-    # "1"*24 erstellt eine 24 lange Zeichenkette an Einsen. binary[24:] nimmt alle Nullen hinter den 24 Nullen, die zur 1 werden und rechnet diesen an die 24 einsen ran
+    # "1" (String) *netmask erstellt eine definierte lange Zeichenkette an Einsen. binary[netmask:] nimmt alle Nullen hinter den 24 Nullen, die zur  1 werden und rechnet diesen an die 24 einsen ran
     netzmaskeInBinär ="1" * netmask + binary[netmask:]
+
     #der Textwarp Import sorgt dafür, das die Variable netzmaskeInBinär in 8er Bereiche auf
     netzmaskeInBinärAufteilung = textwrap.wrap(netzmaskeInBinär, width=8)
 
@@ -31,21 +35,15 @@ def netmaskUmrechnenToBinary(netmask,binary):
     print("Netzmaske:\t\t", netmask)
     print("Netzmaske in Binary: \t",netzmaskeMitPunktenInBinary)
 
+    for i in range(4):
+        binärZahlen=netzmaskeInBinärAufteilung[i]
+        decimalNumber = int(binärZahlen, 2)
+        listeNetmaskeDezimal.append(decimalNumber)
 
+    listenNetzmaskenDezimalMitPunkt = str(listeNetmaskeDezimal[0])+"."+str(listeNetmaskeDezimal[1])+"."+str(listeNetmaskeDezimal[2])+"."+str(listeNetmaskeDezimal[3])
+    print("Netzmaske:\t\t",listenNetzmaskenDezimalMitPunkt)
     
-#def netmaskUmrechnenToIP(netzmaskeInBinärAufteilung):
-    #  subnetzmaske = "255." + ".".join(str(int(ipBinary[i:i+8], 2)) for i in range(0, 32, 8))
-    #  subnetzmaskeAufteilung = subnetzmaske.split(".")
-    #  for i in range(4):
-    #      if net
-    
 
-
-
-
-
-   
-    
 #prüft, ob eine IPv4 Adresse eingegeben wurde und ansonsten gibt es ein Fehler aus
 if len(ipv)==4:
     ipUmrechnenToBinary(ip,listBinary)

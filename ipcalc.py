@@ -46,24 +46,21 @@ def netzmaskenBinär(netmask):
 #Rechnet Binär in Dezimal um
 def dezimalCalc(result,ausgabeName):
     dezimalzahl = []
-    dezimalzahlInt=[]
     #Teilt den übergebenen String in 4 Teile
-    netzmaskeInBinärAufteilung2 = textwrap.wrap(result, width=8)
+    netzmaskeInBinärAufteilung = textwrap.wrap(result, width=8)
 
     #Rechnet von Binär in Dezimal um
     for i in range(4):
-        binärZahlen=netzmaskeInBinärAufteilung2[i]
+        binärZahlen=netzmaskeInBinärAufteilung[i]
         decimalNumber = int(binärZahlen, 2)
-        #Wandelt das Ergebnis in einen String um und fügt es zu einer Liste hinzu
-        dezimalzahl.append(str(decimalNumber))
-        dezimalzahlInt.append(decimalNumber)
+        #Fügt den Integer in eine Liste ein
+        dezimalzahl.append(decimalNumber)
 
-    #Der übergebende Text wird in die Variable eingefügt
-    nameDezimal = ausgabeName
+    #Der übergebende Text wird der Funktion übergeben
     #Die Liste mit den Dezimalzahlen wird and die Funktion "point()" übergeben
-    point(dezimalzahl,nameDezimal)
+    point(dezimalzahl,ausgabeName)
     #Gibt die Liste mit den Dezimalzahlen weiter
-    return dezimalzahlInt
+    return dezimalzahl
 
    
 def point(liste,name):
@@ -95,7 +92,7 @@ def netzwerkAdresse(subnetmaskOPBinary,ipOPBinary):
                 liste.append("0")
         else:
             liste.append("0")
-
+  
     result = ""
 
     for element in liste:
@@ -155,7 +152,7 @@ def nullSetzten(start, ende, blockNr, berechnungAnzahlBitsMöglichkeitenImBlock,
     broadcastadresse[3] = broadcastadresse[3] + berechnungAnzahlBitsMöglichkeitenImBlock - 1 #Rechnet die Broadcastadresse aus (aktuelle + anzahl Bits -1, weil es der erste ist und die 0 beachtet werden muss)
 
 ##Setzt den gewünschten Teil der IP-Adresse auf 255  und erhöht einen gewünschten Teil der IP-Adresse (wird zur Berechnung von "symetrischesNetzwerk()" gebraucht)
-def richtigeZahlSetzten(größer,start,ende,broadcastadresse,netzwerkadresseListe):
+def Zahl255Setzten(größer,start,ende,broadcastadresse,netzwerkadresseListe):
     for i in range(start, ende):
         broadcastadresse[i] = 255
     broadcastadresse[start-1]=int(broadcastadresse[start-1])+größer
@@ -172,17 +169,23 @@ def symetrischesNetzwerk(netzwerkAdresseDezimal,subnetzmaskeDezimal,berechnungAn
     bitAnzahl=berechnungAnzahlBitsMöglichkeitenImBlock[0]
     blockanzahl=int(berechnungAnzahlBitsMöglichkeitenImBlock[2])
     listenposition=3
+
+    
     
     
     point(netzwerkAdresseDezimal,"Netzwerkadresse:\t")
     point(broadcastadresseDezimal,"Größste Broadcastadresse:")
     print(end="\n")
 
+    for i in range(4):
+        broadcastadresse[i]=int(broadcastadresse[i])
+        netzwerkadresseListe[i]=int(netzwerkadresseListe[i])
+
     #Fragt, ob wirklich alle Möglichkeiten ausgegeben werden sollen
     allesAusgeben = input("Sollen alle möglichkeiten ausgegeben werden? ")
     if allesAusgeben=="Ja"or allesAusgeben=="ja"or allesAusgeben=="j":
         #Wenn ja, wird die Variable Netzgröße = der wahren Netzgröße, gesetzt
-        netzgröße=int(berechnungAnzahlBitsMöglichkeitenImBlock[1]/bitAnzahl)
+        netzgröße=berechnungAnzahlBitsMöglichkeitenImBlock[1]/bitAnzahl
         netzgröße=blockanzahl
 
     else:
@@ -200,10 +203,10 @@ def symetrischesNetzwerk(netzwerkAdresseDezimal,subnetzmaskeDezimal,berechnungAn
             größer255D=größer255Z//255
             
             #Prüft, ob die grade Erhöht Position in der IP-Adresse, kleiner ist als die passende Position in der größsten Broadcastadresse
-            if int(broadcastadresse[listenposition]) < int(broadcastadresseDezimal[listenposition]) and listenposition <3:
+            if broadcastadresse[listenposition] < int(broadcastadresseDezimal[listenposition]) and listenposition <3:
                 netzwerkadresseListe[3]=0
-                netzwerkadresseListe[listenposition]=int(broadcastadresse[listenposition])+1
-                broadcastadresse[listenposition]=int(broadcastadresse[listenposition])+vergrößern
+                netzwerkadresseListe[listenposition]=broadcastadresse[listenposition]+1
+                broadcastadresse[listenposition]=broadcastadresse[listenposition]+vergrößern
 
             #Prüft, ob die "bitAnzahl" kleiner ist als 255 und wenn ja, ob die Variable "größer255E" kleiner ist als gleich 255 ist
             elif bitAnzahl>=255 and größer255E<=255:
@@ -211,8 +214,8 @@ def symetrischesNetzwerk(netzwerkAdresseDezimal,subnetzmaskeDezimal,berechnungAn
                 if i==0:
                     #da man bei Null startet, rechnet man -1
                     größer255E-=1
-                #"richtigeZahlSetzten()" setzt die Broadcastadresse in Bestimmten Listen Teilen auf 255 und die Netzwerkadresse auf der dritten Position auf 0
-                richtigeZahlSetzten(größer255E,3,4,broadcastadresse,netzwerkadresseListe)
+                #"Zahl255Setzten()" setzt die Broadcastadresse in Bestimmten Listen Teilen auf 255 und die Netzwerkadresse auf der dritten Position auf 0
+                Zahl255Setzten(größer255E,3,4,broadcastadresse,netzwerkadresseListe)
                 #"vergrößern" übergibt die Variable, die Zahl beinhaltet, welche die Vergrößerung bestimmt. Und rechnet +1, da nur wegen der kleinsten Netzwerkadresse -1 gerechnet wurde
                 vergrößern=größer255E+1
                 #Gibt die Listenposition an, welche vergrößert wird
@@ -224,8 +227,8 @@ def symetrischesNetzwerk(netzwerkAdresseDezimal,subnetzmaskeDezimal,berechnungAn
                 if i==0:
                     #da man bei Null startet, rechnet man -1
                     größer255Z-=1
-                #"richtigeZahlSetzten()" setzt die Broadcastadresse in Bestimmten Listen Teilen auf 255 und die Netzwerkadresse auf der dritten Position auf 0
-                richtigeZahlSetzten(größer255Z,2,4,broadcastadresse,netzwerkadresseListe)
+                #"Zahl255Setzten()" setzt die Broadcastadresse in Bestimmten Listen Teilen auf 255 und die Netzwerkadresse auf der dritten Position auf 0
+                Zahl255Setzten(größer255Z,2,4,broadcastadresse,netzwerkadresseListe)
                 #"vergrößern" übergibt die Variable, die Zahl beinhaltet, welche die Vergrößerung bestimmt. Und rechnet +1, da nur wegen der kleinsten Netzwerkadresse -1 gerechnet wurde
                 vergrößern=größer255Z+1
                 #Gibt die Listenposition an, welche vergrößert wird
@@ -235,8 +238,8 @@ def symetrischesNetzwerk(netzwerkAdresseDezimal,subnetzmaskeDezimal,berechnungAn
                 if i==0:
                     #da man bei Null startet, rechnet man -1
                     größer255D-=1
-                #"richtigeZahlSetzten()" setzt die Broadcastadresse in Bestimmten Listen Teilen auf 255 und die Netzwerkadresse auf der dritten Position auf 0
-                richtigeZahlSetzten(größer255D,1,4,broadcastadresse,netzwerkadresseListe)
+                #"Zahl255Setzten()" setzt die Broadcastadresse in Bestimmten Listen Teilen auf 255 und die Netzwerkadresse auf der dritten Position auf 0
+                Zahl255Setzten(größer255D,1,4,broadcastadresse,netzwerkadresseListe)
                  #"vergrößern" übergibt die Variable, die Zahl beinhaltet, welche die Vergrößerung bestimmt. Und rechnet +1, da nur wegen der kleinsten Netzwerkadresse -1 gerechnet wurde
                 vergrößern=größer255D
                 #Gibt die Listenposition an, welche vergrößert wird
@@ -245,14 +248,15 @@ def symetrischesNetzwerk(netzwerkAdresseDezimal,subnetzmaskeDezimal,berechnungAn
             #Ausgabe der Adressen in Dezimal mit Punkt
             print("Hostblock:",i+1)
             point(netzwerkadresseListe,"Netzwerkadresse:\t")
-            
+
+            netzwerkadresseListe[3]=int(netzwerkadresseListe[3])
 
             #Berechnung der kleinsten und größsten IP-Adresse
             ipkleinste=netzwerkadresseListe
-            ipkleinste[3]=int(netzwerkadresseListe[3])+1
+            ipkleinste[3]=netzwerkadresseListe[3]+1
             
             ipGrößste=broadcastadresse
-            ipGrößste[3]=int(broadcastadresse[3])-1
+            ipGrößste[3]=broadcastadresse[3]-1
 
              #Ausgabe der Adressen in Dezimal mit Punkt
             point(ipkleinste,"Kleinste IP-Adresse:\t")
@@ -261,57 +265,63 @@ def symetrischesNetzwerk(netzwerkAdresseDezimal,subnetzmaskeDezimal,berechnungAn
             point(broadcastadresse,"Broadcastadresse:\t")
             print(end="\n")
 
+            #"point()" ändert die Variablen in einen String um. Deswegen wird hier, zum weiteren berechnen der Adressen, diese wieder in einen Integer umgewandelt
+            for i in range(4):
+                netzwerkadresseListe[i]=int(netzwerkadresseListe[i])
+                ipkleinste[i]=int(ipkleinste[i])
+                ipGrößste[i]=int(ipGrößste[i])
+                broadcastadresse[i]=int(broadcastadresse[i])
     else:
         
 
-            for i in range(netzgröße):  #Netzgröße= Anzahl der möglichen Blöcke
+        for i in range(netzgröße):  #Netzgröße= Anzahl der möglichen Blöcke
 
-                if broadcastadresse[3] == 0:
-                    #Berechnung der Broadcastadresse, Netzwerkadresse, und "kleinerGroß()". Die Broadcastadresse wir hier -1 Gerechnet, da die erste Netzwerkadresse immer mit 0 anfängt
-                    broadcastadresse[3]+=bitAnzahl - 1
-                    netzwerkadresseListe[3]=0
-                    kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
+            if broadcastadresse[3] == 0:
+                #Berechnung der Broadcastadresse, Netzwerkadresse, und "kleinerGroß()". Die Broadcastadresse wir hier -1 Gerechnet, da die erste Netzwerkadresse immer mit 0 anfängt
+                broadcastadresse[3]+=bitAnzahl - 1
+                netzwerkadresseListe[3]=0
+                kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
 
-                elif subnetzMaske[0] ==255 and broadcastadresse[3]==broadcastadresse[2]==broadcastadresse[1]==255 or broadcastadresse[0]==255 or subnetzMaske[1] ==255 and broadcastadresse[3]==broadcastadresse[2]==255 or subnetzMaske[2] ==255 and broadcastadresse[3]==255:
-                    #Sorgt für ein Ende der For-Schleife und beendet die Ausführung, wenn entweder die Broadcastadresse auf 255.255.255.255 ist oder wenn die Subnetzmaske erreicht wird
-                    exit() 
+            elif subnetzMaske[0] ==255 and broadcastadresse[3]==broadcastadresse[2]==broadcastadresse[1]==255 or broadcastadresse[0]==255 or subnetzMaske[1] ==255 and broadcastadresse[3]==broadcastadresse[2]==255 or subnetzMaske[2] ==255 and broadcastadresse[3]==255:
+                #Sorgt für ein Ende der For-Schleife und beendet die Ausführung, wenn entweder die Broadcastadresse auf 255.255.255.255 ist oder wenn die Subnetzmaske erreicht wird
+                exit() 
 
-                elif broadcastadresse[3] == 255 and broadcastadresse[2] == 255 and broadcastadresse[1] == 255 and subnetzMaske[0] < 255:
-                    #Rechnet beim ersten IP-Teil +1 und setzt den Rest auf 0 zurück, um die weiteren Adressen zu berechnen
-                    nullSetzten(1,4,0,bitAnzahl,broadcastadresse,netzwerkadresseListe)#1.Startwert, 2. Endwert, 3. ZahlenblockNr der Adresse
-                    kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
+            elif broadcastadresse[3] == 255 and broadcastadresse[2] == 255 and broadcastadresse[1] == 255 and subnetzMaske[0] < 255:
+                #Rechnet beim ersten IP-Teil +1 und setzt den Rest auf 0 zurück, um die weiteren Adressen zu berechnen
+                nullSetzten(1,4,0,bitAnzahl,broadcastadresse,netzwerkadresseListe)#1.Startwert, 2. Endwert, 3. ZahlenblockNr der Adresse
+                kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
 
-                elif broadcastadresse[3] == 255 and broadcastadresse[2] == 255 and subnetzMaske[1] < 255:
-                    #Rechnet beim zweiten IP-Teil +1 und setzt den Rest auf 0 zurück, um die weiteren Adressen zu berechnen
-                    nullSetzten(2,4,1,bitAnzahl,broadcastadresse,netzwerkadresseListe)#1.Startwert, 2. Endwert, 3. ZahlenblockNr der Adresse
-                    kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
+            elif broadcastadresse[3] == 255 and broadcastadresse[2] == 255 and subnetzMaske[1] < 255:
+                #Rechnet beim zweiten IP-Teil +1 und setzt den Rest auf 0 zurück, um die weiteren Adressen zu berechnen
+                nullSetzten(2,4,1,bitAnzahl,broadcastadresse,netzwerkadresseListe)#1.Startwert, 2. Endwert, 3. ZahlenblockNr der Adresse
+                kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
 
-                elif broadcastadresse[3] == 255 and subnetzMaske[2] < 255:
-                    #Rechnet beim dritten IP-Teil +1 und setzt den Rest auf 0 zurück, um die weiteren Adressen zu berechnen
-                    nullSetzten(3,4,2,bitAnzahl,broadcastadresse,netzwerkadresseListe)#1.Startwert, 2. Endwert, 3. ZahlenblockNr der Adresse
-                    kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
+            elif broadcastadresse[3] == 255 and subnetzMaske[2] < 255:
+                #Rechnet beim dritten IP-Teil +1 und setzt den Rest auf 0 zurück, um die weiteren Adressen zu berechnen
+                nullSetzten(3,4,2,bitAnzahl,broadcastadresse,netzwerkadresseListe)#1.Startwert, 2. Endwert, 3. ZahlenblockNr der Adresse
+                kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
 
-                else:
-                    #Rechnet die Netzwerkadresse, Broadcastadresse und die kleinerGroß Adresse aus.
-                    netzwerkadresseListe[3]=broadcastadresse[3]+1 #Netzwerkadresse= alte Broadcastadresse +1 auf den letzten IP-Zahlenblock
-                    broadcastadresse[3] += bitAnzahl #broadcastadresse = alte Broadcastadresse + Anzahl der möglichen Bits (32-VLSM=anzahlmöglicher Bits)
-                    kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
-                    #Netzwerkadresse hier hinzufügen!
+            else:
+                #Rechnet die Netzwerkadresse, Broadcastadresse und die kleinerGroß Adresse aus.
+                netzwerkadresseListe[3]=broadcastadresse[3]+1 #Netzwerkadresse= alte Broadcastadresse +1 auf den letzten IP-Zahlenblock
+                broadcastadresse[3] += bitAnzahl #broadcastadresse = alte Broadcastadresse + Anzahl der möglichen Bits (32-VLSM=anzahlmöglicher Bits)
+                kleinerGroß(netzwerkadresseListe,broadcastadresse,ipkleinste,ipGrößste)
+                #Netzwerkadresse hier hinzufügen!
                 
-                print("Hostblock:",i+1)
-                #Ausgabe der Adressen in Dezimal mit Punkt
-                point(netzwerkadresseListe,"Netzwerkadresse:\t")
-                point(ipkleinste,"Kleinste IP-Adresse:\t")
-                point(ipGrößste,"Größe IP-Adresse:\t")
-                point(broadcastadresse,"Broadcastadresse:\t")
-                print(end="\n")
+            print("Hostblock:",i+1)
+            #Ausgabe der Adressen in Dezimal mit Punkt
+            point(netzwerkadresseListe,"Netzwerkadresse:\t")
+            point(ipkleinste,"Kleinste IP-Adresse:\t")
+            point(ipGrößste,"Größe IP-Adresse:\t")
+            point(broadcastadresse,"Broadcastadresse:\t")
+            print(end="\n")
 
-                #"point()" ändert die Variablen in einen String um. Deswegen wird hier, zum weiteren berechnen der Adressen, diese wieder in einen Integer umgewandelt
-                for i in range(4):
-                    netzwerkadresseListe[i]=int(netzwerkadresseListe[i])
-                    ipkleinste[i]=int(ipkleinste[i])
-                    ipGrößste[i]=int(ipGrößste[i])
-                    broadcastadresse[i]=int(broadcastadresse[i])
+            #"point()" ändert die Variablen in einen String um. Deswegen wird hier, zum weiteren berechnen der Adressen, diese wieder in einen Integer umgewandelt
+            for i in range(4):
+                netzwerkadresseListe[i]=int(netzwerkadresseListe[i])
+                ipkleinste[i]=int(ipkleinste[i])
+                ipGrößste[i]=int(ipGrößste[i])
+                broadcastadresse[i]=int(broadcastadresse[i])
 
 #Gibt und rechnet die gewünschten Asymetrischen Blöcke aus
 def asymetrisch(netzwerkadresse,subnetzmaskeDezimal):

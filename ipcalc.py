@@ -443,14 +443,14 @@ if len(ipv)==4:
     #resultOhnePunkt=ohnePunkte(binarySubnet)
     binaryIPOhnePunkt=ohnePunkte(binaryIP)
 
-    netzwerkAdresseBinär=netzwerkAdresse(binarySubnet,binaryIPOhnePunkt)
-    broadcastadresseBinär=broadcastAddress(netzwerkAdresseBinär,netmask) #Größste Broadcastadresse
-    netzwerkAdresseDezimal=netzwerkAdresse(binarySubnet,binaryIPOhnePunkt)
+    netzwerkAdresse=netzwerkAdresse(binarySubnet,binaryIPOhnePunkt)
+    broadcastadresseBinär=broadcastAddress(netzwerkAdresse,netmask) #Größste Broadcastadresse
+    #netzwerkAdresseDezimal=netzwerkAdresse(binarySubnet,binaryIPOhnePunkt)
     
     #Sorgt dafür, dass in Dezimal umgerechtnet wird und mit Punkt ausgegeben wird. Da die Funktion "dezimalCalc()"" auch "point()" aufrunf und "point()" das Ergebnis ausgibt
     #Hier wird nur die Liste in die Variable gespeichert, die bei "dezimalCalc()" "returnt" wurde
     broadcastadresseDezimal=dezimalCalc(broadcastadresseBinär, "Broadcastadresse in Dezimal:") 
-    netzwerkadresseUmwandlungDezimal=dezimalCalc(netzwerkAdresseDezimal,"Netzwerkadresse in Dezimal:")
+    netzwerkadresseUmwandlungDezimal=dezimalCalc(netzwerkAdresse,"Netzwerkadresse in Dezimal:")
     
     eingabeSymetrisch= input("Soll es Symetrisch sein? " )
 
